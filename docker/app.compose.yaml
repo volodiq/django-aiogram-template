@@ -1,0 +1,27 @@
+services:
+  backend:
+    build: ../backend
+    restart: unless-stopped
+    command: sh /app/start_backend.sh
+    env_file:
+      - ../.env
+    volumes:
+      - django-static:/app/static
+
+  bot:
+    build: ../bot
+    restart: unless-stopped
+    command: sh /app/start_bot.sh
+    env_file:
+      - ../.env
+
+  nginx:
+    image: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - django-static:/app/django_static
+
+volumes:
+  django-static: {}
