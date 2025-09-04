@@ -5,6 +5,8 @@ services:
     command: sh /app/start_backend.sh
     env_file:
       - ../.env
+    environment:
+      - IS_RUN_AS_SERVICE: true
     volumes:
       - django-static:/app/static
 
