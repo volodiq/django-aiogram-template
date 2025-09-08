@@ -5,7 +5,7 @@ requires-python = ">=3.12"
 dependencies = [
     "aiogram>=3.22.0",
     "aiogram-dialog>=2.4.0",
-    "dependency-injector>=4.48.1",
+    "dishka>=1.6.0",
     "environs>=14.3.0",
     "httpx>=0.28.1",
     "loguru>=0.7.3",

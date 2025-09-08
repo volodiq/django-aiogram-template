@@ -3,7 +3,9 @@ import logging
 from aiogram import Dispatcher
 from aiogram.fsm.storage.redis import DefaultKeyBuilder, RedisStorage
 from aiogram_dialog import setup_dialogs
+from dishka.integrations.aiogram import setup_dishka
 
+from app.container import container
 from app.root_router import root_router
 from providers import env
 from providers.bot import bot
@@ -18,6 +20,7 @@ async def main():
     dp = Dispatcher(storage=fsm_storage)
     dp.include_router(root_router)
     setup_dialogs(dp)
+    setup_dishka(container=container, router=dp, auto_inject=True)
     await dp.start_polling(bot)
 
 

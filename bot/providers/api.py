@@ -37,7 +37,7 @@ DTO = TypeVar("DTO", bound=BaseModel)
 
 
 @dataclass
-class BaseApiClient:
+class APIClient:
     tg_id: int
     http_client: AsyncClient
 
@@ -200,3 +200,8 @@ class BaseApiClient:
             headers=headers,
             timeout=10,
         )
+
+
+@dataclass
+class API:
+    api_client: APIClient
