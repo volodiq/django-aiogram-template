@@ -1,18 +1,16 @@
-from aiogram.dispatcher.middlewares.user_context import EVENT_CONTEXT_KEY
 from aiogram_dialog import Dialog, DialogManager, Window
 from aiogram_dialog.widgets import text
+from dishka.integrations.aiogram import FromDishka
+from dishka.integrations.aiogram_dialog import inject
 
-from core.di import UsersContainer
+from core.api import UsersAPI
 
 from ..states import UsersMenuSG
 
 
-async def menu_getter(dialog_manager: DialogManager, *args, **kwargs):
-    user_id: int = dialog_manager.middleware_data[EVENT_CONTEXT_KEY].user_id
-
-    async with UsersContainer.start(user_id) as container:
-        api = await container.users_api_client()
-        data = await api.get_me()
+@inject
+async def menu_getter(dialog_manager: DialogManager, api: FromDishka[UsersAPI], *args, **kwargs):
+    data = await api.get_me()
 
     return {
         "greet_msg": f"{data}",
