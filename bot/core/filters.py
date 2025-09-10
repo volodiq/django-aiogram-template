@@ -1,15 +1,18 @@
 from aiogram import filters, types
+from dishka.integrations.aiogram import FromDishka
 
-from .di import UsersContainer
+from .api import UsersAPI
 
 
 class IsAdmin(filters.BaseFilter):
-    async def __call__(self, message: types.Message) -> bool:
+    async def __call__(
+        self,
+        message: types.Message,
+        users_api_client: FromDishka[UsersAPI],
+    ) -> bool:
         user = message.from_user
         if user is None:
             raise ValueError("User is None")
 
-        async with UsersContainer.start(user.id) as container:
-            api = await container.users_api_client()
-            data = await api.get_me()
-            return data.is_superuser
+        data = await users_api_client.get_me()
+        return data.is_superuser

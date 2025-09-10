@@ -57,10 +57,10 @@ class TelegramHMACAuth(Auth):
         yield request
 
 
-@dataclass
-class APIClient:
-    tg_id: int
-    http_client: AsyncClient
+class ResponseProcessor:
+    """
+    Обработка ответа API.
+    """
 
     @staticmethod
     def _process_unsuccessful_response(
@@ -105,7 +105,7 @@ class APIClient:
         raise APIEmptyResponseError(path=path)
 
     @classmethod
-    def _process_response(
+    def process_response(
         cls,
         path: str,
         response_dto: type[DTO] | None,
@@ -128,6 +128,12 @@ class APIClient:
 
         return response_dto.model_validate(data)
 
+
+@dataclass
+class APIClient:
+    tg_id: int
+    http_client: AsyncClient
+
     async def _make_request(
         self,
         method: str,
@@ -148,7 +154,7 @@ class APIClient:
             log.error("NetworkError while request. Path: {path}", path=path)
             raise APIUnavailableError(path=path) from e
 
-        return self._process_response(
+        return ResponseProcessor.process_response(
             path=path,
             response_dto=response_dto,
             response=response,
